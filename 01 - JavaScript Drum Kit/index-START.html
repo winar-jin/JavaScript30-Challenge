@@ -89,6 +89,7 @@
   }
   function stopTransition(e){
     if(e.propertyName !== 'transform') return;
+    console.log(this === e.target); //true
     e.target.classList.remove('playing');
   }
   window.addEventListener('keydown',playAudio);

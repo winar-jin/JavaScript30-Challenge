@@ -5,7 +5,7 @@
 
 第一天的练习是用Js制作一个爵士鼓的页面，通过敲击键盘上不同的字母，会发出不同的声音，并且页面上会伴随着敲击的动画。
 
-_[效果如下](http://htmlpreview.github.io/?https://github.com/winar-jin/JavaScript30-Challenge/blob/master/01%20-%20JavaScript%20Drum%20Kit/index-START.html)_
+_[效果如下](http://htmlpreview.github.io/?https://github.com/winar-jin/JavaScript30-Challenge/blob/master/01%20-%20JavaScript%20Drum%20Kit/index.html)_
 
 想要实现以上效果，大致思路和解决方案如下：
 * 检测到键盘上什么键被按下--监听`keydown`事件

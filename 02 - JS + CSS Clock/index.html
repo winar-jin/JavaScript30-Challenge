@@ -107,6 +107,10 @@
     const secondDegree = (seconds / 60) * 360 + 90;
     const minDegree = ((minutes / 60) * 360) + ((seconds / 60) * 6) + 90;
     const hourDegree = ((hours / 12) * 360) + ((minutes / 60) * 30) + 90;
+    if (secondDegree === 90) secondHand.style.transition = 'all 0s';
+    else secondHand.style.transition = 'all .5s';
+    if (minDegree === 90) minHand.style.transition = 'all 0s';
+    else minHand.style.transition = 'all 0.1s';
     hourHand.style.transform = `rotate(${hourDegree}deg)`;
     minHand.style.transform = `rotate(${minDegree}deg)`;
     secondHand.style.transform = `rotate(${secondDegree}deg)`;

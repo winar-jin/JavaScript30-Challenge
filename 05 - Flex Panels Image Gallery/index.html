@@ -141,17 +141,28 @@
 
   //优化，提取出函数
   const panels = document.querySelectorAll('.panel');
-    function toggleOpen() {
-      this.classList.toggle('open');
+
+  function clearOpenClass(){
+    panels.forEach(panel => panel.classList.remove('open'));
+  }
+  function toggleOpen() {
+    if(this.classList.contains('open')){
+      clearOpenClass();
+      this.classList.remove('open');
+    }else{
+      clearOpenClass();
+      this.classList.add('open');
     }
-    function toggleActive(e) {
-    //   console.log(e.propertyName);
-      if (e.propertyName.includes('flex')) {
-        this.classList.toggle('open-active');
-      }
+    // this.classList.toggle('open');
+  }
+  function toggleActive(e) {
+  //   console.log(e.propertyName);
+    if (e.propertyName.includes('flex')) {
+      this.classList.toggle('open-active');
     }
-    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
-    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
+  }
+  panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+  panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
   </script>
 
 

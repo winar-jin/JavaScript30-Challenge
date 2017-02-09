@@ -15,7 +15,7 @@
     </ul>
   </form>
 <script>
-window.log = window.console.log; 
+window.log = window.console.log;  //只用log()就可以进行调试了
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
 function numberWithCommas(x) {
@@ -23,8 +23,6 @@ function numberWithCommas(x) {
 }
 
 const cities = [];
-const searchContent = document.querySelector('.search');
-const suggestions = document.querySelector('.suggestions');
 
 fetch(endpoint)
     .then(blob => blob.json())
@@ -58,6 +56,8 @@ function displayCity(){
   }
 }
 
+const searchContent = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
 searchContent.addEventListener('change',displayCity);
 searchContent.addEventListener('keyup',displayCity);
 

@@ -18,8 +18,13 @@
 window.log = window.console.log; 
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 const cities = [];
 const searchContent = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
 
 fetch(endpoint)
     .then(blob => blob.json())
@@ -32,7 +37,29 @@ function findCity(searchString,cities){
   return cities.filter(item => (item.city.search(regx) !== -1) || (item.state.search(regx) !== -1));
 }
 
-searchContent.addEventListener('change',findCity(this.value,cities));
+function displayCity(){
+  const searchRusult = findCity(this.value,cities);
+  const regx = new RegExp(this.value,'gi');
+  const dom = searchRusult.map(item => {
+    const city = item.city.replace(regx,`<span class="hl">${this.value}</span>`);
+    const state = item.state.replace(regx,`<span class="hl">${this.value}</span>`);
+    return `
+      <li>
+        <span class="name">${city},${state}</span>
+        <span class="population">${numberWithCommas(item.population)}</span>
+      </li>
+      `;
+      }).join('');
+  suggestions.innerHTML = dom;
+  if(this.value == ''){
+    suggestions.innerHTML = `
+    <li>Filter for a city</li>
+      <li>or a state</li>`;
+  }
+}
+
+searchContent.addEventListener('change',displayCity);
+searchContent.addEventListener('keyup',displayCity);
 
 </script>
   </body>

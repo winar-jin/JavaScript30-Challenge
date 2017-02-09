@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+window.log = window.console.log; 
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+const cities = [];
+const searchContent = document.querySelector('.search');
+
+fetch(endpoint)
+    .then(blob => blob.json())
+    .then(data => cities.push(...data));
+
+
+function findCity(searchString,cities){
+  const regx = new RegExp(searchString,'gi');
+  //return cities.filter(item => item.city.includes(searchString) || item.state.includes(searchString));
+  return cities.filter(item => (item.city.search(regx) !== -1) || (item.state.search(regx) !== -1));
+}
+
+searchContent.addEventListener('change',findCity(this.value,cities));
+
+</script>
+  </body>
+</html>

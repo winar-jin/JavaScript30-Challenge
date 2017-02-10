@@ -17,13 +17,7 @@
 <script>
 window.log = window.console.log;  //只用log()就可以进行调试了
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
 const cities = [];
-
 fetch(endpoint)
     .then(blob => blob.json())
     .then(data => cities.push(...data));
@@ -35,6 +29,9 @@ function findCity(searchString,cities){
   return cities.filter(item => (item.city.search(regx) !== -1) || (item.state.search(regx) !== -1));
 }
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 function displayCity(){
   const searchRusult = findCity(this.value,cities);
   const regx = new RegExp(this.value,'gi');

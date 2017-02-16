@@ -111,28 +111,28 @@
   function sheckhandle(e){
     if(e.shiftKey && this.checked && lastone && lastone.checked){
       checkboxes.forEach(checkbox => {
-        console.log(this);
-        console.log(lastone);
+        //console.log(this);
+        //console.log(lastone);
         if(checkbox === this || checkbox === lastone){
-          console.log('!!!');
+         // console.log('!!!');
           inbetween = !inbetween;
         }
-        console.log(inbetween);
+       // console.log(inbetween);
        if(inbetween && this !== lastone){
           checkbox.checked = true;
         }
       });
-      console.log(this);
+     // console.log(this);
     }
     if(this.checked){
-      console.log(this.checked);
+     // console.log(this.checked);
       lastone = this;
     }
   }
 
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('click',sheckhandle);
-    });
+  });
 </script>
 </body>
 </html>

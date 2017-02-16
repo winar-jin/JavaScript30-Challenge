@@ -140,3 +140,5 @@ filledflag && handlefilled(e)
 使用`&&`判断左右两变量，只有两个都为真的时候整体表达式才为真，且在判断时从左向右依次判断，若左变量就为假，就不会再去执行右边的表达式。
 
 ok，第十一天的任务完成了！
+
+> 最后推荐一个讲解HTML5的Video标签的[参考文档](https://www.w3.org/2010/05/video/mediaevents.html)。

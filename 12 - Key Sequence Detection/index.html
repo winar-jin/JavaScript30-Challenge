@@ -8,8 +8,9 @@
 <body>
 <script>
   const candidateCode = [];
-  const secretCode = 'iamboss'
-  document.addEventListener('keyup',(e) => {
+  const secretCode = 'iamboss';
+  window.addEventListener('keyup', (e) => {
+  //document.addEventListener('keyup',(e) => {
     candidateCode.push(e.key);
     candidateCode.splice(-secretCode.length-1,candidateCode.length - secretCode.length);
     // candidateCode.splice(0,candidateCode.length - secretCode.length);

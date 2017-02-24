@@ -1,54 +1,49 @@
 > 在Github上看到了[wesbos](https://twitter.com/wesbos)的一个Javascript30天挑战的[repo](https://github.com/wesbos/JavaScript30)，旨在使用纯Js来进行练习，不允许使用任何其他的库和框架，该挑战共30天，我会在这里记录下自己练习的过程和遇到的问题。
 
-## Day12 - Key Sequence Detection
+## Day13 - Slide in on Scroll
 
-第十二天的目标是要完成按键按下的序列侦查，比如我们预设一个字符串“haha”，只要用户在浏览器中按顺序按下这四个字母，就可以触发所绑定的事件，这个功能也经常被公司在浏览器中为用户埋下小的把戏和惊喜。
+第十三天的小练习是实现页面内伴随着鼠标滚动，到每个图片时图片出现，并伴随着动画出现。
 
-[效果如下](http://htmlpreview.github.io/?https://github.com/winar-jin/JavaScript30-Challenge/blob/master/11%20-%20Custom%20Video%20Player/index.html)
+[效果如下](http://htmlpreview.github.io/?https://github.com/winar-jin/JavaScript30-Challenge/blob/master/13%20-%20Slide%20in%20on%20Scroll/index.html)
 
 ## 实现思路
-
-1. 首先为整个文档绑定`keyup`事件，监听用户的键盘操作，当用户按下键盘松开时，触发此事件，根据`e.key`可以获得这次按下的是什么按键。
-2. 实现绑定的事件，将用户输入的字符序列存入数组中，并截取最后几个输入的和预设字符串相同长度的字符串，将两者进行比较，相同则触发trick。
+1. 首先要先获取需要加载动画的元素
+2. 监听window的滚动事件`scroll`，绑定图片动画的函数
+3. 在`checkSlide()`函数中，实现滚动到每一个图片的一半位置时，图片从两边飞入的动画效果
 
 ## 整体代码
 ```Javascript
-const candidateCode = [];
-const secretCode = 'iamboss';
-window.addEventListener('keyup', (e) => {
-//document.addEventListener('keyup',(e) => {
-candidateCode.push(e.key);
-candidateCode.splice(-secretCode.length-1,candidateCode.length - secretCode.length);
-// candidateCode.splice(0,candidateCode.length - secretCode.length);
-if(candidateCode.join('').includes(secretCode)){
-  alert('awesome！');
+const sliderImages = document.querySelectorAll('.slide-in');
+function checkSlide(e) {
+  sliderImages.forEach(sliderimage => {
+    // 滑动到图片显示的一半
+    const slideAt = window.innerHeight + window.scrollY - sliderimage.height/2;
+    // 图片底部距文档顶部的距离
+    const imageBottom = sliderimage.offsetTop + sliderimage.height;
+    // 图片是否已经显示了一半
+    const isHalfShown = slideAt > sliderimage.offsetTop;
+    // 图片是否已经被完全滚动出去
+    const isNotScrolledPast = window.scrollY < imageBottom;
+    if(isHalfShown && isNotScrolledPast){
+      sliderimage.classList.add('active');
+    } else {
+      sliderimage.classList.remove('active');
+    }
+  });
 }
-console.log(candidateCode);
-});
+window.addEventListener('scroll', debounce(checkSlide));
 ```
 
-### `window`/`document`
-Window：是主Javascript的根对象，也是浏览器中的全局对象，也可以被视为文档对象模型的根。 在大多数浏览器中，我们可以直接通过`window`获取。
-window.document：或者可以称为document，是可视化的文档对象模型（DOM）的主对象。
+## 难点
+这个练习整体不难，我认为其中的距离的计算算是这个小练习中最为难以理解的部分，更像是数学问题。
 
-![windows/document](https://i.stack.imgur.com/hrvHr.jpg)
+* 首先获取触发动画的位置，在滚动到图片一半的位置时触发。
+`const slideAt = window.innerHeight + window.scrollY - sliderimage.height/2;`
+	* `window.innerHeight`表示浏览器的内部视图窗口的高度值
+	* `window.scrollY`表示浏览器当前的在Y轴上滚动的距离（未滚动时值为0），也可通过采用`window.scroll(X,Y)`方法，设置页面在X轴和Y轴上面的滚动值
+* 再获取图片底部到页面文档顶端的距离，采用`const imageBottom = sliderimage.offsetTop + sliderimage.height;`
+	* `sliderimage.offsetTop`表示该图片最上面的值，到页面文档顶端的距离，再加上该图片的高度，就是图片底部到页面文档顶端的距离
+* 设置两个flag，分别表示图片是否显示了一半和图片是否已经被完全滚动出去了，分别为`const isHalfShown = slideAt > sliderimage.offsetTop;`，`const isNotScrolledPast = window.scrollY < imageBottom;`
+* 只有当图片已经显示了一半并且没有被图片没有被滚动出窗口是，图片才会显示出来，此处的动画处理方式如下：默认时将图片向左或向右移动30%，当图片出现在窗口中时，取消该图片的移动，显示在原位置；再加上`transition: all .5s;`，在图片出现的时候，就会显示出约0.5秒的过渡动画。
 
-> The window object represents the current browsing context. It holds things like window.location, window.history, window.screen, window.status, or the window.document. Also, it has information about the framing setup (the frames, parent, top, self properties), and holds important interfaces such as applicationCache, XMLHttpRequest, setTimeout, escape, console or localStorage. Last but not least it acts as the global scope for JavaScript, i.e. all global variables are properties of it.
-> In contrast, the (window.)document object represents the DOM that is currently loaded in the window - it's just a part of it. A document holds information like the documentElement (usually <html>), the forms collection, the cookie string, its location, or its readyState. It also implements a different interface (there might be multiple Documents, for example an XML document obtained via ajax), with methods like getElementById or addEventListener.
-> 
-> ——Answered By Bergi in [StackoverFlow](http://stackoverflow.com/questions/17227008/trying-to-understand-the-difference-between-window-and-document-objects-in-js) 
-
-在这里我们通过为全局对象window绑定`keyup`事件，获取按下的每一个按键值。
-
-### 截取字符串
-在将用户按下的按键获取到后，存储到一个数组中，通过`candidateCode.splice()`截取字符串，需要删去前面的所有字符，只保留最后的几个字符，长度为`secretCode `字符串的长度，因此此时第一个参数可以设为`0`代表从第一个字符开始删除，也可以设置为`-secretCode.length-1`，第一个参数为负数，代表从后往前数，数到的位置作为删除的起始点，`-secretCode.length`的长度会数到第二个值，因为字符串数组的下标是从0开始索引的，所以要想从第1个开始删除，需要再-1。
-第二个参数是欲删除字符的个数，因为我们要留下和`secretCode`长度相同的字符串，因为应该删除前面所有的字符，也就是输入字符串的长度-`secretCode`的长度，即`candidateCode.length - secretCode.length`。
-
-### 判断是否相同
-当截取了和`secretCode`相同长度的字符串后，就要判断两者是否相同，通过调用`String.prototype.includes()`方法，若一个字符串中包含另一个字符串，返回`true`，否则返回`false`。当返回`true`的时候触发trick。
-
-还记得上一篇提到的使用&&运算符优化代码的方法么？
-当&&的左边为true是才会继续执行&右边的表达式。
-因此这一例也可以这样写：`candidateCode.join('').includes(secretCode) && alert('awesome！')`
-
-到这里，键盘序列侦查的功能已经完成。👍
+OK，到这里就实现了，当当☑

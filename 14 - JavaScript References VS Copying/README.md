@@ -2,48 +2,129 @@
 
 ## Day14 - JavaScript References VS Copying
 
-第十三天的小练习是实现页面内伴随着鼠标滚动，到每个图片时图片出现，并伴随着动画出现。
+第十四天我们主要练习的是JavaScript的变量引用和变量复制。简单一句话总结就是：基本类型按值操作，而对象类型由引用操作。
+如果还在困惑，就看下面的练习代码吧。（在console面板中调试运行）
+[效果如下](http://htmlpreview.github.io/?https://github.com/winar-jin/JavaScript30-Challenge/blob/master/14%20-%20JavaScript%20References%20VS%20Copying/index.html)
 
-[效果如下](http://htmlpreview.github.io/?https://github.com/winar-jin/JavaScript30-Challenge/blob/master/13%20-%20Slide%20in%20on%20Scroll/index.html)
+## 按值操作
 
-## 实现思路
-1. 首先要先获取需要加载动画的元素
-2. 监听window的滚动事件`scroll`，绑定图片动画的函数
-3. 在`checkSlide()`函数中，实现滚动到每一个图片的一半位置时，图片从两边飞入的动画效果
+基本类型由值操作。以下类型在JavaScript中被视为基本类型：
 
-## 整体代码
+`String`
+
+`Number`
+
+`Boolean`
+
+`Null`
+
+`Undefined`
+
+这意味着如果我们将变量定义为基本类型，然后将另一个变量定义为之前定义的那个变量。
+则第二个变量将复制第一个变量的当前值。对第一个变量的任何更改都不会影响第二个变量，反之亦然。
+
+### 实例
+
 ```Javascript
-const sliderImages = document.querySelectorAll('.slide-in');
-function checkSlide(e) {
-  sliderImages.forEach(sliderimage => {
-    // 滑动到图片显示的一半
-    const slideAt = window.innerHeight + window.scrollY - sliderimage.height/2;
-    // 图片底部距文档顶部的距离
-    const imageBottom = sliderimage.offsetTop + sliderimage.height;
-    // 图片是否已经显示了一半
-    const isHalfShown = slideAt > sliderimage.offsetTop;
-    // 图片是否已经被完全滚动出去
-    const isNotScrolledPast = window.scrollY < imageBottom;
-    if(isHalfShown && isNotScrolledPast){
-      sliderimage.classList.add('active');
-    } else {
-      sliderimage.classList.remove('active');
-    }
-  });
-}
-window.addEventListener('scroll', debounce(checkSlide));
+let me = "Winar"
+let me2 = me
+console.log(me === me2) // true
+
+me2 = "Jackie"
+console.log(me === me2, me, me2) // false, "Winar", "Jackie"; 
+
+me = "Not Winar"
+console.log(me === me2, me, me2) // false, "Not Winar", "Jackie"
 ```
+由此可见，基本类型，按值操作，新建的变量会将值复制给新的变量，各自的改变不会互相影响。
 
-## 难点
-这个练习整体不难，我认为其中的距离的计算算是这个小练习中最为难以理解的部分，更像是数学问题。
+## 通过引用操作
 
-* 首先获取触发动画的位置，在滚动到图片一半的位置时触发。
-`const slideAt = window.innerHeight + window.scrollY - sliderimage.height/2;`
-	* `window.innerHeight`表示浏览器的内部视图窗口的高度值
-	* `window.scrollY`表示浏览器当前的在Y轴上滚动的距离（未滚动时值为0），也可通过采用`window.scroll(X,Y)`方法，设置页面在X轴和Y轴上面的滚动值
-* 再获取图片底部到页面文档顶端的距离，采用`const imageBottom = sliderimage.offsetTop + sliderimage.height;`
-	* `sliderimage.offsetTop`表示该图片最上面的值，到页面文档顶端的距离，再加上该图片的高度，就是图片底部到页面文档顶端的距离
-* 设置两个flag，分别表示图片是否显示了一半和图片是否已经被完全滚动出去了，分别为`const isHalfShown = slideAt > sliderimage.offsetTop;`，`const isNotScrolledPast = window.scrollY < imageBottom;`
-* 只有当图片已经显示了一半并且没有被图片没有被滚动出窗口是，图片才会显示出来，此处的动画处理方式如下：默认时将图片向左或向右移动30%，当图片出现在窗口中时，取消该图片的移动，显示在原位置；再加上`transition: all .5s;`，在图片出现的时候，就会显示出约0.5秒的过渡动画。
+对象`Object`类型是按引用操作的，如果它不是基本类型中的一个，那么它就是对象，这里如果我们细究的话，JavaScript中每一个东西都可以当做对象，甚至是基本的类型（不包括`null`和`undefined`），但我们尽量不要钻这个牛角尖。
 
-OK，到这里就实现了，当当☑
+一些JavaScript中的对象：
+
+`Object`
+
+`Function`
+
+`Array`
+
+`Set`
+
+`Map`
+
+### 实例
+假设我们声明一个变量并将其定义为一个对象，然后声明另一个变量并将其定义为第一个变量：
+```Javascript
+const me = {name: "Winar", age: 23}
+const me2 = me
+console.log(me === me2) // true
+```
+如果我们调用这两个变量中的任何一个，并更改其中的属性值，那么这两个变量都会相应的发生变化。
+```Javascript
+me.name = "Jackie"
+console.log(me === me2) // true
+console.log(me2) // { name: 'Jackie', age: 23 }
+```
+这是因为`me2`并不是简单的复`me`的值，它是指向用`const`定义的`me`的一个引用，任何对这个变量的更改都会立即反映到每一个变量上，可以理解为它们实际上指向的都是一个值，只要有一个改变了它，其他的值自然就会变。
+
+那么如果我们想要简单拷贝原始对象的值，以便后期对变量的操作不会影响原始对象的值，那我们该怎么做呢？
+
+```Javascript
+const me3 = Object.assign({}, me) // create a new object,and copy me to me3
+console.log(me3) // { name: 'Jackie', age: 23 }
+console.log(me === me3) // false! ! 
+// 🔔 这两个分别是两个不同的对象实例，就像两个人虽然都叫小明，但他们确是两个人一样。
+console.log(me.name === me3.name) // true! The property values are the same!
+me3.name = "Devin"
+console.log(`${me.name}, ${me3.name}`) // 'Jackie, Devin'
+```
+我们成功的创建了一个新的对象，并对它进行复制操作，这样我们在修改我们的副本对象时就不用担心对原对象产生影响了。
+
+❗️如果我们复制的对象也包含对象，那么我们只能复制到第一层。 任何比第一层更深的值仍然是原对象的引用。
+
+解决此问题有以下两种途径：
+
+* 采用深拷贝的方法
+```Javascript
+function clone(obj) {
+    var copy;
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+    // Handle Date
+    if (obj instanceof Date) {
+        copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+    // Handle Array
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+    // Handle Object
+    if (obj instanceof Object) {
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+}
+```
+> -- 来自于[StackOverflow](http://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object)
+
+* 采用JSON字符串
+
+`JSON.parse(JSON.stringify(obj))`
+
+首先调用`JSON.stringify()`方法将对象解析为字符串，再调用`JSON.parse()`方法，将字符串解析为对象，这是一个小技巧，在处理对象的复制时很有用。
+
+[参考文档](http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript)
+
+到这里这个练习就算结束了。⚓

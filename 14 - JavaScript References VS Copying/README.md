@@ -125,6 +125,6 @@ function clone(obj) {
 
 首先调用`JSON.stringify()`方法将对象解析为字符串，再调用`JSON.parse()`方法，将字符串解析为对象，这是一个小技巧，在处理对象的复制时很有用。
 
-[参考文档](http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript)
-
+[参考文档1](http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript)
+[4种复制对象的方法](http://heyjavascript.com/4-creative-ways-to-clone-objects/)
 到这里这个练习就算结束了。⚓

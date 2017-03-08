@@ -50,6 +50,16 @@
       e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
       return confirmationMessage; // 如果有返回值的话，就会弹出确认框。
     };
+    // window.onbeforeunload = function (event) {
+    //   var message = 'Important: Please click on \'Save\' button to leave this page.';
+    //   if (typeof event == 'undefined') {
+    //     event = window.event;
+    //   }
+    //   if (event) {
+    //     event.returnValue = message;
+    //   }
+    //   return message;
+    // };
     const addItems = document.querySelector('.add-items');
     const itemsList = document.querySelector('.plates');
     const items = [];

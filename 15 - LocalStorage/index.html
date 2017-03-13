@@ -43,13 +43,13 @@
   </div>
 
   <script>
-    // 在关闭浏览器之后清除缓存
-    window.onbeforeunload = function (e) {
-      localStorage.removeItem('items');
-      let confirmationMessage = "\o/";
-      e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-      return confirmationMessage; // 如果有返回值的话，就会弹出确认框。
-    };
+    //在关闭浏览器之后清除缓存
+    // window.onbeforeunload = function (e) {
+    //   localStorage.removeItem('items');
+    //   // let confirmationMessage = "\o/";
+    //   e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+    //   // return confirmationMessage; // 如果有返回值的话，就会弹出确认框。
+    // };
     // window.onbeforeunload = function (event) {
     //   var message = 'Important: Please click on \'Save\' button to leave this page.';
     //   if (typeof event == 'undefined') {
@@ -62,7 +62,51 @@
     // };
     const addItems = document.querySelector('.add-items');
     const itemsList = document.querySelector('.plates');
-    const items = [];
+    const items = JSON.parse(localStorage.getItem('items')) || [];
+
+    function addItem(e) {
+      e.preventDefault();
+      const text = this.querySelector('[name=item]').value;
+      const item = {
+        text, // ES6的简写形式 => text = text;
+        done: false
+      };
+      items.push(item);
+      localStorage.setItem('items', JSON.stringify(items));
+      populateList(items, itemsList);
+      this.reset(); // 添加完数据后，重置输入框      
+    }
+
+    function populateList(populates = [], place) { // 设置默认值，防止传参数出错的时候crash
+      place.innerHTML = populates.map((populate, index) => {
+        return `
+          <li>
+            <input type="checkbox" id=item${index} data-index=${index} ${populate.done ? 'checked' : ''}>
+            <label for="item${index}">${(populate.text)}</label>
+          </li>
+        `; //之所以用‘’空字符是因为如果用null的话，会出现在html中
+      }).join(''); // join()之后一定要加''，表示空字符，否则会加入逗号，造成错误  
+    }
+
+    function toggleDone(e) {
+      // if(!e.target.nodeName.match('INPUT')) return;
+      if (!e.target.matches('input')) return; // 跳过所有的input，只处理label
+      const node = e.target;
+      const index = node.dataset.index;
+      items[index].done = !items[index].done;
+      localStorage.setItem('items', JSON.stringify(items));
+      populateList(items, itemsList);
+    }
+
+    addItems.addEventListener('submit', addItem);
+    itemsList.addEventListener('click', toggleDone);
+
+    populateList(items, itemsList);
+
+    // 3 addtion function
+    // Check all
+    // Uncheck all
+    // Clear all
   </script>
 
 

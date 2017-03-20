@@ -64,3 +64,5 @@ offsetParent 很有用，因为 _offsetTop_ 和 _offsetLeft_ 都是相对于其�
 * HTMLElement.offsetLeft：指的是当前元素到其offsetParent指向元素的__左边距__的距离。（如图所示）
 * HTMLElement.offsetHeight：指的是当前元素的__高度__，包含__content，padding，border__的高度值，但不包括__margin__的值。（如图所示）
 * HTMLElement.offsetWidth：指的是当前元素的__宽度__，包含__content，padding，border__的高度值，但不包括__margin__的值。（如图所示）
+
+OK了！

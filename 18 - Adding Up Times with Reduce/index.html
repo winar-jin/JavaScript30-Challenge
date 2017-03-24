@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Videos</title>
+  <title>Adding Up Times with Reduce</title>
 </head>
+
 <body>
   <ul class="videos">
     <li data-time="5:43">
@@ -181,17 +183,49 @@
       Video 58
     </li>
   </ul>
-<script>
+  <script>
+    let items = document.querySelectorAll('ul li');
 
-  const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
+    // 1. [...items] => 将其展开为数组
+    // 2. Array.from(items) => 使用Array.from()将items转换为数组 
+    // 3. [].map(parseFloat) => [].map(function(x) {retunr parseFloat(x)});
 
-  const seconds = timeNodes
-    .map(node => node.dataset.time)
-    .map(timeCode => {
-      const [mins, secs] = timeCode.split(':').map(parseFloat);
-      return (mins * 60) + secs;
-    })
-    .reduce((total, vidSeconds) => total + vidSeconds);
+    // const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
+
+    let itemtimearray = [];
+    for (let item of items) {
+      itemtimearray.push(item.dataset.time);
+    }
+    let spiltitmes = itemtimearray.map(item => {
+      let temp = item.split(':');
+      return {
+        min: temp[0],
+        sencond: temp[1]
+      }
+    });
+    let totalMin = 0;
+    let totalSec = 0;
+    totalMin = spiltitmes.reduce((total, time) => {
+      return total += parseInt(time.min);
+    }, 0);
+    totalSec = spiltitmes.reduce((total, time) => {
+      return total += parseInt(time.sencond);
+    }, 0);
+    let finalSecond = parseInt(totalSec % 60);
+    let finalMin = parseInt(totalMin + (totalSec / 60)) % 60;
+    let finalHour = parseInt((totalMin + (totalSec / 60)) / 60);
+    console.log(`共${finalHour}小时,${finalMin}分钟,${finalSecond}秒。`);
+
+    // 方法二：
+    const timeNodes = Array.from(document.querySelectorAll('[data-time]'));
+
+    const seconds = timeNodes
+      .map(node => node.dataset.time)
+      .map(timeCode => {
+        const [mins, secs] = timeCode.split(':').map(parseFloat);
+        return (mins * 60) + secs;
+      })
+      .reduce((total, vidSeconds) => total + vidSeconds);
 
     let secondsLeft = seconds;
     const hours = Math.floor(secondsLeft / 3600);
@@ -201,7 +235,7 @@
     secondsLeft = secondsLeft % 60;
 
     console.log(hours, mins, secondsLeft);
-
-</script>
+  </script>
 </body>
+
 </html>

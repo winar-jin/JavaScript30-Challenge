@@ -16,27 +16,33 @@
 
   recognition.interimResults = true;
 
+  // 创建p便签，附加到DOM树中
   let p = document.createElement('p');
   const words = document.querySelector('.words');
   words.appendChild(p);
 
+  // 监听recognition的result事件，获取到语音输入的文字
   recognition.addEventListener('result', (e) => {
     const results = Array.from(e.results)
       .map(result => result[0])
       .map(result => result.transcript)
       .join('');
 
+      // 可以动态的将其中的某一个词语换掉
       const poopScript = results.replace(/good/gi, '👍');
       p.textContent = poopScript;
 
+      // 如果当前一段输入结束了，也就是有停顿，就会新建一个p便签
       if(e.results[0].isFinal){
         p =document.createElement('p');
         words.appendChild(p);
       }
   });
 
+  // 监听recognition的end事件，当前输入结束后，再次开始，使其一直处于输入状态
   recognition.addEventListener('end',recognition.start);
 
+  // 开启recognition
   recognition.start();
 
 

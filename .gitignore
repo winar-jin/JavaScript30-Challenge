@@ -3,3 +3,4 @@ node_modules/
 *.log
 .vscode/
 */node_modules/
+.idea/

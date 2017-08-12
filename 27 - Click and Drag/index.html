@@ -43,7 +43,6 @@
     let scrollLeft;
     item.addEventListener('mousemove', (e) => {
       if (!isDown) return;
-      console.log(startX);
       e.preventDefault();
       let x = e.pageX - item.offsetLeft;
       let walkX = (x - startX) * 3;

@@ -47,7 +47,7 @@ buttons.forEach(button => button.addEventListener('click', startTimer, false));
 
 document.customForm.addEventListener('submit', function (e) {
 	e.preventDefault();
-	const seconds = parseInt(this.minutes.value, 10);
+	const seconds = parseInt(this.minutes.value * 60, 10);
 	timer(seconds);
 	this.reset();
 }, false);
